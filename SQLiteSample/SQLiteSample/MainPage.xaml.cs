@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +26,18 @@ namespace SQLiteSample
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private async void SearchButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var student = Database.SearchStudentById(int.Parse(txtUserId.Text));
+            if (student == null)
+            {
+                await new MessageDialog("Your student Id is invalid").ShowAsync();
+                return;
+            }
+
+            this.Frame.Navigate(typeof(GradesPage), student);
         }
     }
 }

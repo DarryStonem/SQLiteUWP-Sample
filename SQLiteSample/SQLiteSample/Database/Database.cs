@@ -56,8 +56,8 @@ namespace SQLiteSample
         {
             using (var db = DbConnection)
             {
-                var c = db.CreateTable<Student>();
-                var info = db.GetMapping(typeof(Student));
+                var c = db.CreateTable<Grade>();
+                var info = db.GetMapping(typeof(Grade));
             }
         }
 
@@ -139,7 +139,7 @@ namespace SQLiteSample
         /// Add many students
         /// </summary>
         /// <param name="list"></param>
-        public static void AddAllStudents(IEnumerable<string> list)
+        public static void AddAllStudents(IEnumerable<Student> list)
         {
             using (var db = new SQLiteConnection(new SQLitePlatformWinRT(), DbPath))
             {
@@ -250,6 +250,20 @@ namespace SQLiteSample
                     // Update
                     db.Update(grade);
                 }
+            }
+        }
+
+        public static void AddAllGradesToStudent(IEnumerable<Grade> list, int studentId)
+        {
+            using (var db = new SQLiteConnection(new SQLitePlatformWinRT(), DbPath))
+            {
+                var grades = new List<Grade>();
+                foreach (var item in list)
+                {
+                    item.StudentId = studentId;
+                    grades.Add(item);
+                }
+                db.InsertAll(grades);
             }
         }
 

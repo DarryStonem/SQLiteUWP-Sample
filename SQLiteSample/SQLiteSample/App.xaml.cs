@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLiteSample.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,6 +53,10 @@ namespace SQLiteSample
 
             Frame rootFrame = Window.Current.Content as Frame;
 
+            Database.CreateDatabaseForGrades();
+            Database.CreateDatabaseForStudents();
+            CreateFakeStudents();
+
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
@@ -79,6 +84,79 @@ namespace SQLiteSample
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private void CreateFakeStudents()
+        {
+            if (Database.CountStudents() > 0)
+                return;
+
+            Student gabe = new Student()
+            {
+                Name = "Gabe",
+                LastName = "Aul",
+                Email = "gabe.aul@microsoft.com",
+                PhoneNumber = "5255400331122"
+            };
+
+            Student satya = new Student()
+            {
+                Name = "Satya",
+                LastName = "Nadella",
+                Email = "satya.nadella@microsoft.com",
+                PhoneNumber = "5255400331122"
+            };
+
+            Student bill = new Student()
+            {
+                Name = "Bill",
+                LastName = "Gates",
+                Email = "bill.gates@microsoft.com",
+                PhoneNumber = "5255400331122"
+            };
+
+            Database.AddOrUpdateStudent(gabe);
+            Database.AddOrUpdateStudent(satya);
+            Database.AddOrUpdateStudent(bill);
+
+            gabe = Database.SearchStudentByEmail(gabe.Email);
+            satya = Database.SearchStudentByEmail(satya.Email);
+            bill = Database.SearchStudentByEmail(bill.Email);
+
+            List<Grade> grades = new List<Grade>();
+            grades.Add(new Grade()
+            {
+                Class = "Math",
+                Result = new Random().Next(10).ToString(),
+            });
+
+            grades.Add(new Grade()
+            {
+                Class = "Spanish",
+                Result = new Random().Next(10).ToString(),
+            });
+
+            grades.Add(new Grade()
+            {
+                Class = "Science",
+                Result = new Random().Next(10).ToString(),
+            });
+
+            grades.Add(new Grade()
+            {
+                Class = "Xamarin",
+                Result = new Random().Next(10).ToString(),
+            });
+
+            grades.Add(new Grade()
+            {
+                Class = "Windows",
+                Result = new Random().Next(10).ToString(),
+            });
+
+            Database.AddAllGradesToStudent(grades, gabe.Id);
+            Database.AddAllGradesToStudent(grades, satya.Id);
+            Database.AddAllGradesToStudent(grades, bill.Id);
         }
 
         /// <summary>
